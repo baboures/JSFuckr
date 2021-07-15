@@ -1,24 +1,27 @@
-/*! JSFuck 0.5.0 - http://jsfuck.com */
+/*! 
+ *  JSFuckr v1.0 (mod by @baboures)
+ *  Write any JavaScript with 6 Characters: ([+<])
+ */
 
 (function(self){
   const MIN = 32, MAX = 126;
 
   const SIMPLE = {
-    'false':      '![]',
-    'true':       '!![]',
+    'false':      '([]<[])',
+    'true':       '([]<[+[]])',
     'undefined':  '[][[]]',
-    'NaN':        '+[![]]',
-    'Infinity':   '+(+!+[]+(!+[]+[])[!+[]+!+[]+!+[]]+[+!+[]]+[+[]]+[+[]]+[+[]])' // +"1e1000"
+    'NaN':        '+[[]<[]]',
+    'Infinity':   '+([+([]<[+[]])]+(([]<[+[]])+[])[([]<[+[]])+([]<[+[]])+([]<[+[]])]+[+([]<[+[]])]+[+[]]+[+[]]+[+[]])' // +"1e1000"
   };
 
   const CONSTRUCTORS = {
     'Array':    '[]',
     'Number':   '(+[])',
     'String':   '([]+[])',
-    'Boolean':  '(![])',
+    'Boolean':  '([]<[])',
     'Function': '[]["flat"]',
     'RegExp':   'Function("return/"+false+"/")()',
-    'Object':	'[]["entries"]()'
+    'Object':	  '[]["entries"]()'
   };
 
   const MAPPING = {
@@ -87,10 +90,10 @@
     '(':   '([]["flat"]+"")[13]',
     ')':   '([0]+false+[]["flat"])[20]',
     '*':   null,
-    '+':   '(+(+!+[]+(!+[]+[])[!+[]+!+[]+!+[]]+[+!+[]]+[+[]]+[+[]])+[])[2]',
+    '+':   '(+([+([]<[+[]])]+(([]<[+[]])+[])[([]<[+[]])+([]<[+[]])+([]<[+[]])]+[+([]<[+[]])]+[+[]]+[+[]])+[])[2]', // (+"1e100"+[])[2]
     ',':   '[[]]["concat"]([[]])+""',
     '-':   '(+(.+[0000001])+"")[2]',
-    '.':   '(+(+!+[]+[+!+[]]+(!![]+[])[!+[]+!+[]+!+[]]+[!+[]+!+[]]+[+[]])+[])[+!+[]]',
+    '.':   '(+([+([]<[+[]])]+[+([]<[+[]])]+(([]<[+[]])+[])[([]<[+[]])+([]<[+[]])+([]<[+[]])]+[([]<[+[]])+([]<[+[]])]+[+[]])+[])[1]', // (+"11e20"+[])[1]
     '/':   '(false+[0])["italics"]()[10]',
     ':':   '(RegExp()+"")[3]',
     ';':   '("")["fontcolor"](NaN+")[21]',
@@ -113,16 +116,15 @@
 
   const GLOBAL = 'Function("return this")()';
 
+  /* fill digits of the range 0-9 in mapping */
   function fillMissingDigits(){
     var output, number, i;
-
     for (number = 0; number < 10; number++){
 
-      output = "+[]";
-
-      if (number > 0){ output = "+!" + output; }
-      for (i = 1; i < number; i++){ output = "+!+[]" + output; }
-      if (number > 1){ output = output.substr(1); }
+      output = "";
+      if(number == 0){ output = "+[]" }
+      for (i = 0; i < number; i++){ output += "+([]<[+[]])"; }
+      if (number > 1){ output = output.substr(1); } // if number > 1, strip the first + sign (not needed): ([]<[+[]])+([]<[+[]]) == +([]<[+[]])+([]<[+[]]) == 2
 
       MAPPING[number] = "[" + output + "]";
     }
@@ -138,17 +140,21 @@
       );
     }
 
+    /* replace numbers consisting of only 1 digit */
     function digitReplacer(_,x) { return MAPPING[x]; }
 
+    /* replace numbers consisting of 2 or more digits */
     function numberReplacer(_,y) {
-      var values = y.split("");
-      var head = +(values.shift());
-      var output = "+[]";
+      var values = y.split(""); // get the digits
+      var head = +(values.shift()); // get the leftmost digit and remove it from the array
+      var output = "";
 
-      if (head > 0){ output = "+!" + output; }
-      for (i = 1; i < head; i++){ output = "+!+[]" + output; }
-      if (head > 1){ output = output.substr(1); }
+      /* Optimization note: the first digit does not need to be enclosed between brackets: 1+[2] == [1]+[2] == "12" */
+      if(head == 0){ output = "+[]" }
+      for (i = 0; i < head; i++){ output += "+([]<[+[]])"; }
+      if (head > 1){ output = output.substr(1); } // if head > 1, strip the first + sign (not needed): ([]<[+[]])+([]<[+[]]) == +([]<[+[]])+([]<[+[]]) == 2
 
+      /* All the remaining digits need to be enclosed between brackets: 1+2+[3] == (1+2)+[3] == "33" != "123", but 1+[2]+[3] == "123" */
       return [output].concat(values).join("+").replace(/(\d)/g, digitReplacer);
     }
 
@@ -178,7 +184,7 @@
   }
 
   function replaceStrings(){
-    var regEx = /[^\[\]\(\)\!\+]{1}/g,
+    var regEx = /[^\[\]\(\)\<\+]{1}/g,
       all, value, missing,
       count = MAX - MIN;
 
@@ -346,7 +352,7 @@
   replaceMap();
   replaceStrings();
 
-  self.JSFuck = {
+  self.JSFuckr = {
     encode: encode
   };
 })(typeof(exports) === "undefined" ? window : exports);
