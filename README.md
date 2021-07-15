@@ -1,3 +1,8 @@
-# JSFuckr `([+<])`
+## JSFuckr: An esoteric language based on JSFuck
 
-JSFuckr is an esoteric language based on [JSFuck](http://jsfuck.com). It encodes JavaScript using only six chars ([+<])
+**Features**
+- You can encode JavaScript using only six chars `([+<])`
+- It is a variant of [JSFuck](http://jsfuck.com), but uses `<` instead of `!`
+- Can be safely inserted into unquoted HTML attributes without breaking the HTML syntax
+
+https://baboures.github.io/tools/jsfuckr/
