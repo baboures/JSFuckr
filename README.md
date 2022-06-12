@@ -1,10 +1,12 @@
 ## JSFuckr: An esoteric language based on JSFuck
 
+Try it online: https://baboures.github.io/tools/jsfuckr/
+
 **Features**
 - You can encode JavaScript using only six chars `([+<])`
 - It's a modification of [JSFuck](http://jsfuck.com) that uses `<` instead of `!`
 
-**How it works**
+**How it works** (see the [full mapping](https://github.com/baboures/JSFuckr/blob/master/MAPPING.json))
 
 ```js
 
@@ -43,5 +45,3 @@
 '100': [+([]<[+[]])]+[+[]]+[+[]]
 '123': [+([]<[+[]])]+[([]<[+[]])+([]<[+[]])]+[([]<[+[]])+([]<[+[]])+([]<[+[]])]
 ```
-
-Try online: https://baboures.github.io/tools/jsfuckr/
