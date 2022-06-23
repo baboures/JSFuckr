@@ -6,7 +6,7 @@ Try it online: https://baboures.github.io/tools/jsfuckr/
 - You can encode JavaScript using only six chars `([+<])`
 - It's a modification of [JSFuck](http://jsfuck.com) that uses `<` instead of `!`
 
-**How it works** (see the [full mapping](https://github.com/baboures/JSFuckr/blob/master/MAPPING.json))
+**How it works** (see the [full mapping](https://github.com/baboures/JSFuckr/blob/master/MAPPING.json) or a [step-by-step example](https://github.com/aemkei/jsfuck/issues/122#issuecomment-1164710384))
 
 ```js
 
